@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler  # Utilisation de MinMaxScaler
 
@@ -18,6 +19,14 @@ def gradient_descent(X, y, theta, learning_rate, n_iterations):
     for i in range(0, n_iterations):
         theta = theta - learning_rate * grad(X, y, theta)
     return theta
+
+def update_parameters(theta_final):
+    with open('parameters.json', 'r') as file:
+        data = json.load(file)
+    data["theta0"] = float(theta_final[0])
+    data["theta1"] = float(theta_final[1])
+    with open('parameters.json', "w") as file:
+        json.dump(data, file, indent=4)
 
 def main():
     try:
@@ -42,7 +51,7 @@ def main():
         XX = np.concatenate((x, billet), axis=1)
         y_pred = model(XX, theta_final)
         print(theta_final)
-        print(theta_final[0] * 240000 + theta_final[1])
+        update_parameters(theta_final)
 
         plt.scatter(x, y, label='Données réelles')
         plt.plot(x, y_pred, color='red', label='Régression linéaire')
@@ -54,6 +63,6 @@ def main():
     except KeyboardInterrupt:
         return
     except Exception as error:
-        print("Error: {error}")
+        print(f"Error: {error}")
 
 main()
