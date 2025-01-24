@@ -59,7 +59,7 @@ def main():
         plt.xlabel("Kilomètres")
         plt.ylabel("Prix")
         plt.legend()
-        plt.show()
+        plt.savefig("graphique")
     except KeyboardInterrupt:
         return
     except Exception as error:
