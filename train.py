@@ -23,10 +23,23 @@ def gradient_descent(X, y, theta, learning_rate, n_iterations):
 def update_parameters(theta_final):
     with open('parameters.json', 'r') as file:
         data = json.load(file)
-    data["theta0"] = float(theta_final[0])
-    data["theta1"] = float(theta_final[1])
+    data["theta0"] = float(theta_final[0][0])
+    data["theta1"] = float(theta_final[1][0])
     with open('parameters.json', "w") as file:
         json.dump(data, file, indent=4)
+
+def print_theta(theta_final):
+    print(f"Pente (coefficient) : {theta_final[0][0]}")
+    print(f"Ordonnée à l'origine : {theta_final[1][0]}")
+
+def make_graph(x, y, y_pred):
+    plt.scatter(x, y, label='Données réelles')
+    plt.plot(x, y_pred, color='red', label='Régression linéaire')
+    plt.title("Régression Linéaire")
+    plt.xlabel("Kilomètres")
+    plt.ylabel("Prix")
+    plt.legend()
+    plt.savefig("graphique")
 
 def main():
     try:
@@ -50,18 +63,9 @@ def main():
         theta_final[1] = theta_final[1] - theta_final[0] * scaler.data_min_[0]
         XX = np.concatenate((x, billet), axis=1)
         y_pred = model(XX, theta_final)
-        print(theta_final)
+        print_theta(theta_final)
         update_parameters(theta_final)
-
-        plt.scatter(x, y, label='Données réelles')
-        plt.plot(x, y_pred, color='red', label='Régression linéaire')
-        plt.title("Régression Linéaire")
-        plt.xlabel("Kilomètres")
-        plt.ylabel("Prix")
-        plt.legend()
-        plt.savefig("graphique")
-    except KeyboardInterrupt:
-        return
+        make_graph(x, y, y_pred)
     except Exception as error:
         print(f"Error: {error}")
 
